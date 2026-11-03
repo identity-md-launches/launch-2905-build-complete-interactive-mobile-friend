@@ -171,6 +171,10 @@ export function initWeb3(icon: Icon, announce: (text: string) => void): void {
   async function readBalances(): Promise<void> {
     const address = wallet.getState().address;
     if (!address) return;
+    if (balancesFor !== address) {
+      setText('#w3-eth', 'Loading');
+      setText('#w3-sqk', 'Loading');
+    }
     balancesFor = address;
     const [eth, sqk] = await Promise.allSettled([
       sepoliaRpc<string>('eth_getBalance', [address, 'latest']),

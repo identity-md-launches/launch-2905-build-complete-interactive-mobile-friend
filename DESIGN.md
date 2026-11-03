@@ -49,11 +49,13 @@ Body line-height is 1.5; step copy and dialog paragraphs use 1.6. Headings use 1
 
 Spacing tokens are 4, 8, 12, 16, 24, 32, and 40px (`--space-1` through `--space-10`). Local 6, 10, and 20px adjustments serve icon gaps and compact rows. Shared `.shell` edges align the header, intro, cabinet/sidebar composition, and footer.
 
-The shell is at most 1200px, otherwise viewport minus 80px. At 1130px it uses 24px side margins and a 280px sidebar; the normal sidebar is 300px. At 860px, the cabinet becomes a single column and the supporting sidebar becomes two columns below it. At 560px, margins are 16px, the sidebar stacks, utilities show named icons, the headline is 24px, and the cabinet statistics use 24px values. At 350px margins are 12px and the combo hint gets a separate line.
+The shell is at most 1200px, otherwise viewport minus 80px. At 1130px it uses 24px side margins and a 280px sidebar; the normal sidebar is 300px. At 860px, the cabinet becomes a single column and the supporting sidebar becomes two columns below it. Through 760px, the header uses the compact wordmark, icon-only Sound and Help buttons with accessible names, 8px utility gaps, and a shorter Connect label with 10px inline padding. Through 400px the wordmark shows only its mouse icon and retains its full accessible name. At 560px, margins are 16px, the sidebar stacks, the headline is 24px, and the cabinet statistics use 24px values. At 350px margins are 12px and the combo hint gets a separate line.
 
 The header minimum height is 100px, then 84px under 860px, then 72px under 560px. The mobile wordmark can wrap when text is enlarged. The scene uses minimum heights of 420px desktop and 348px phone, and grows with content. Controls remain in document flow. Decorative overflow is clipped inside the scene-art layer. The footer respects the bottom safe-area inset.
 
-Chromium layouts were checked at 320, 390, 768, 1024, and 1440px. At 390 × 844, the mascot and Start Game are fully visible on the first screen. Enlarging root text to 200% reflows without horizontal overflow; this was not native browser zoom.
+Chromium layouts were checked at 320, 360, 375, 390, 400, 401, 560, 561, 600, 640, 760, 761, 768, 1024, and 1440px in disconnected, wrong-network, and connected states. At 390 × 844, the mascot and Start Game are fully visible on the first screen. Enlarging root text to 200% reflows without horizontal overflow; this was not native browser zoom. Header height, intro spacing, and the game's vertical position are unchanged by the compact-header revision.
+
+The Web3 section follows the game and uses the same surface, border, radius, spacing, and typography tokens. `.web3-grid` has four columns on desktop, two through 1130px, and one through 560px. `.w3-card` uses 24px padding, reduced to 16px through 560px. Addresses wrap in full in the wallet card. The native `.wallet-sheet` is at most 420px wide; through 639px it becomes a bottom sheet with a safe-area inset and 48px minimum rows.
 
 ## Elevation & Depth
 
@@ -69,7 +71,9 @@ The cabinet and utilities use an 8px radius, primary/secondary buttons 4px, dial
 
 | Pattern | Source | Behavior and states |
 | --- | --- | --- |
-| Header / utilities | `src/main.ts:24`, `.site-header`, `.wordmark`, `.utility` | Sound toggle exposes `aria-pressed`; help has a permanent accessible name. Utilities and wordmark are at least 44px high. |
+| Header / utilities | `src/main.ts`, `.site-header`, `.wordmark`, `.utility` | Sound toggle exposes `aria-pressed`; help has a permanent accessible name. Utilities and wordmark are at least 44px high. |
+| Wallet control / sheet | `src/web3/dashboard.ts`, `.wallet-button`, `.wallet-row`, `.wallet-sheet` | Connect opens the native dialog; detected wallets have their own rows. Wrong-chain status offers Switch to Sepolia. The connected control shows a short address and opens the dashboard's details and Disconnect. Tab, Escape, visible focus, and focus return follow the native modal pattern. |
+| Web3 dashboard | `src/web3/dashboard.ts`, `.web3-grid`, `.w3-card`, `.w3-list` | Connection state, full address, network, Sepolia ETH/SQK balances, block reads, official wheel API, and sourced contracts. A new balance owner resets both amounts to Loading synchronously; same-account refreshes retain their values. Failed reads show an unavailable state. Warning uses `--color-warning`; connection state also has text. |
 | Primary action | `.button.primary`, `#start`, `#again` | Lime fill, 52px minimum height; 48px on phones. Explicit hover, pressed, focus states. One main action is visible per game screen. |
 | Cabinet / statistics | `.game-panel`, `.scoreboard`, `.stat` | Three aligned values, labeled timer, stable number styles, progress line. Personal best is the saved completed-round record. |
 | Game screens | `showPhase`, `start`, `finish`, `reset` in `src/main.ts` | Welcome, playing, and over use `hidden` for inactive content. Start focuses the mouse; completion focuses Play Again unless a dialog is open. |

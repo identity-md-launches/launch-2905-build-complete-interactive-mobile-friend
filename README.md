@@ -20,7 +20,7 @@ npm run build
 npm run preview
 ```
 
-Serve `dist/` with any static HTTP server. The Vite base is `./`; HTML, scripts, styles, fonts, mascot, favicon, and share image use relative URLs and work under a gateway subpath. There are no runtime third-party requests, backend, wallet flows, or transactions. Opening the source `index.html` directly as a file is not the preview workflow.
+Serve `dist/` with any static HTTP server. The Vite base is `./`; HTML, scripts, styles, fonts, mascot, favicon, and share image use relative URLs and work under a gateway subpath. The optional Web3 dashboard makes read-only requests to public Sepolia RPCs and the official Squeekchain API. No backend or transaction is required. Opening the source `index.html` directly as a file is not the preview workflow.
 
 ## Play
 
@@ -36,6 +36,12 @@ Only completed rounds enter the local leaderboard. The browser stores the most r
 
 There are no seeded players or global rankings. Invalid saved data is discarded safely. If browser storage is unavailable, the game still works and explains that scores last for the current visit.
 
+## Optional wallet and blockchain dashboard
+
+Use **Connect wallet** to choose a detected MetaMask or OKX Wallet extension. On phones without a provider, the picker offers links to open this page in a wallet browser. The header shows the connected address or offers **Switch to Sepolia** for another chain. The dashboard shows the full address, chain ID 11155111, Sepolia ETH and SQK balances, latest Sepolia block, official wheel status, and sourced contract links. Use **Disconnect** in the dashboard to forget the connection. Playing and local scores work without a wallet.
+
+When the account changes or reconnects, both balances show **Loading** until that account's reads complete. Refreshing the same account keeps its existing values. Network or API failures are reported as unavailable; the game remains playable. The app never requests a signature, transaction, private key, or seed phrase. Contract addresses, verification labels, and public data sources remain in `src/web3/config.ts`.
+
 ## Validation
 
 Actual final results:
@@ -44,10 +50,11 @@ Actual final results:
 | --- | --- |
 | Production build | Passed; complete export in `dist/` |
 | TypeScript typecheck | Passed |
-| Rule and storage tests | 9 passed |
-| Chromium interaction checks | 14 passed; 0 failed |
+| Game, storage, and Web3 helper tests | 16 passed |
+| Chromium game interaction checks | 14 passed; 0 failed |
+| Wallet and header regressions | 54 passed; 0 failed |
 | Pinned taste@1 probe | 16 of 16 checks passed |
-| Responsive layout | Checked at 320, 390, 768, 1024, and 1440 CSS pixels |
+| Responsive layout | 15 widths from 320 to 1440px; disconnected, wrong-network, and connected states |
 | Enlarged text | 200% root text size checked at 390px without horizontal overflow |
 
 The interaction suite serves the **built export** at `/preview/`, uses touch and keyboard input, and accelerates time with Playwright’s [Clock API](https://playwright.dev/docs/clock). It checks combo scoring and decay, deadline enforcement, replay, reload persistence, sorting, reset/clear confirmations, modal focus, sound toggle state, reduced motion, unavailable/corrupt storage, resources, and overflow. It closes its server and browsers when finished.
@@ -57,10 +64,11 @@ To repeat it after building:
 ```sh
 npm exec -- playwright install chromium
 npm run test:browser
+node tests/wallet-regressions.mjs
 node scripts/check-export.mjs
 ```
 
-The suite also attempts WebKit and reports a limitation if its runtime cannot launch. In this validation, WebKit did not launch. Physical iPhone/Android testing, screen-reader testing, browser-native zoom, and audible sound verification remain unperformed. A Chromium phone emulation is not a physical device test. The probe leaves six text boxes over scene artwork/gradients unmeasured for contrast; its pass is not a full accessibility certification.
+The wallet regression suite uses test-only EIP-6963 providers and intercepted RPC replies, with no external network dependency. It checks MetaMask and OKX connection, Sepolia switching, account changes while reads are held, same-account refresh, late-reply isolation, reconnect, header collision/overflow, and guest play. The original game suite also passes against the production export. Both suites attempt WebKit; it could not launch here because system libraries are missing. Physical devices, real wallet apps/extensions, screen readers, browser-native zoom, and audible sound verification remain unperformed. A Chromium phone emulation is not a physical device test. The probe leaves six text boxes over scene artwork/gradients unmeasured for contrast; its pass is not a full accessibility certification.
 
 The pinned design probe was also run from the repository root:
 
@@ -68,11 +76,11 @@ The pinned design probe was also run from the repository root:
 node .imd/reads/skills/design-critic/scripts/taste.mjs --out test/scratch/taste
 ```
 
-That probe is an assignment input and is removed from the delivered repository. Its final results are preserved in [artifacts/taste-results.json](artifacts/taste-results.json). Full coverage, corrected findings, and limitations are in [VALIDATION.md](VALIDATION.md), with a delivery copy under `artifacts/`. Screenshots and browser results are included under `artifacts/`; disposable test output goes to `test/scratch/`.
+That probe is an assignment input and is removed from the delivered repository. Its final results are preserved in [artifacts/taste-results.json](artifacts/taste-results.json). Current coverage, reproduced findings, fixes, and limitations are in [VALIDATION.md](VALIDATION.md). The [wallet regression report](artifacts/wallet-regressions.json), [game report](artifacts/browser-results.json), baseline measurements, and screenshots are included under `artifacts/`; disposable test output goes to `test/scratch/`.
 
 ## Static delivery and IPFS
 
-The complete `dist/` directory is ready for IdentityMD’s publishing step, which pins the submitted export to IPFS. The publicly accessible URL is assigned after submission and was not available during this implementation. No CID or public deployment URL is claimed here. The share image uses a relative path because the eventual gateway address is assigned at publication.
+The complete `dist/` directory is ready for IdentityMD’s publishing step, which pins the submitted export to IPFS. This is an update to the existing `squeek-clicker-small-mouse-big-s.identitymd.eth` site name; the publisher updates its version after submission. No publication was performed during this revision. Relative asset paths preserve compatibility with the existing static hosting URL.
 
 Keep source, lockfile, documentation, and `dist/` together in the submission. Dependencies and caches are not part of delivery. No ignore file was changed. `scripts/check-export.mjs` checks the export references and exact delivered-path byte total against the 8,388,608-byte budget; its report is [artifacts/export-results.json](artifacts/export-results.json).
 
@@ -82,6 +90,7 @@ Keep source, lockfile, documentation, and `dist/` together in the submission. De
 - `src/storage.ts`: validation, best-score retention, bounded history.
 - `src/main.ts`: screens, input, local leaderboard, dialogs, feedback, audio.
 - `src/style.css`: tokens, components, breakpoints, motion preferences.
+- `src/web3/`: wallet discovery, read-only dashboard, RPC helpers, chain and contract sources.
 - `public/assets/`: original mouse and favicon SVGs, generated share PNG, font licenses.
 - `src/assets/`: bundled Silkscreen 400 and DM Sans 400/600 WOFF2 files.
 - `tests/`: repeatable rule and production-browser validation.
