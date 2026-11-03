@@ -1,5 +1,6 @@
 import { Game, ROUND_MS, TAPS_PER_LEVEL } from './game';
 import { STORAGE_KEY, addRound, emptyScores, parseScores, type Round } from './storage';
+import { dashboardMarkup, initWeb3, walletButtonMarkup, walletDialogMarkup } from './web3/dashboard';
 
 const paths: Record<string, string> = {
   play: '<path d="m8 5 11 7-11 7z"/>',
@@ -17,15 +18,22 @@ const paths: Record<string, string> = {
   trash: '<path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/>',
   lock: '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/>',
   gamepad: '<path d="M7 6h10l3 3 2 9-3 2-5-4h-4l-5 4-3-2 2-9zM8 9v5m-2.5-2.5h5M16 10h.01M18 13h.01"/>',
+  wallet: '<path d="M4 7h15a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11v3M16 13.5h.01"/>',
+  cube: '<path d="m12 3 8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12 4 7.5"/>',
+  wheel: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v7m0 4v7M3 12h7m4 0h7"/>',
+  coin: '<circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6v2m0 8v2"/>',
+  copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/>',
+  external: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
 };
 const icon = (name: string, cls = '') => `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]}</svg>`;
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <header class="site-header shell">
     <a class="wordmark" href="./" aria-label="Squeek Clicker home"><img src="./assets/favicon.svg" width="36" height="36" alt="" /><span>Squeek<span class="wordmark-secondary"> Clicker</span></span></a>
-    <nav class="utilities" aria-label="Game settings">
+    <nav class="utilities" aria-label="Game settings and wallet">
       <button class="utility sound-toggle" id="sound" type="button" aria-label="Sound" aria-pressed="false"><span id="sound-icon">${icon('mute')}</span><span id="sound-label">Sound off</span></button>
       <button class="utility" id="help" type="button" aria-label="How to play">${icon('help')}<span>How to play</span></button>
+      ${walletButtonMarkup(icon)}
     </nav>
   </header>
   <main class="shell" id="main">
@@ -93,8 +101,10 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         </section>
       </aside>
     </div>
+    ${dashboardMarkup(icon)}
   </main>
   <footer class="site-footer shell"><span>${icon('heart')}Built for the Squeekchain Community</span><span>Big squeeks. Good company.</span></footer>
+  ${walletDialogMarkup(icon)}
   <div class="sr-only" id="announcer" role="status" aria-live="polite" aria-atomic="true"></div>
   <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><h2 id="help-title">How to play</h2><button class="utility" type="button" id="close-help" aria-label="Close instructions">${icon('close')}</button></div><p>Start a round, then tap the mouse as many times as you can in 60 seconds.</p><ul class="help-list"><li><b>Build your combo.</b> Keep taps within 0.6 seconds. At 5, 10, 15, and 20 consecutive taps, earn 2×, 3×, 4×, and 5× points per tap.</li><li><b>Keep the rhythm.</b> A gap longer than 0.6 seconds resets your multiplier to 1×.</li><li><b>Use your keyboard.</b> Focus the mouse and press Space or Enter. Holding a key does not earn extra points.</li><li><b>Watch the clock.</b> Opening help or switching tabs keeps the timer running.</li><li><b>Keep your best.</b> Finished rounds are saved on this browser. Reset discards the current round and keeps saved scores.</li></ul><p class="dialog-footnote">These are game points with no monetary value.</p><button class="button primary" id="got-it" type="button">Got it${icon('chevron')}</button></dialog>
   <dialog id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-description"><h2 id="confirm-title"></h2><p id="confirm-description"></p><form method="dialog" class="dialog-actions"><button class="button secondary" value="cancel" autofocus>Cancel</button><button class="button primary" value="confirm" id="confirm-action">Reset round</button></form></dialog>
@@ -370,3 +380,5 @@ el('#sound').addEventListener('click', async () => {
 });
 
 showPhase(); renderLeaderboard(); renderRound(performance.now());
+// Web3 is additive: the game never waits on a wallet or a network read.
+initWeb3(icon, announce);
