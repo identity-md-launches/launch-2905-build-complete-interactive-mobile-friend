@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <title>A little lavender mouse with big pink ears and a green scarf</title>
+  <!-- Every edge follows the pixel grid. Original Squeek Clicker artwork. -->
+  <path fill="#79629c" d="M15 44H9v3H6v7h3v3h10v-3H9v-5h9z"/>
+  <path fill="#dca2ce" d="M15 45H9v3H7v5h2v2h9v-2H10v-4h7z"/>
+  <path fill="#302b43" d="M15 9h12v3h3v5h5v-5h3V9h12v3h4v4h3v13h-3v5h-5v3h-3v14h-3v4h4v5H32v-4h-4v4H14v-5h4v-5h-3V34h-5v-4H7V17h3v-5h5z"/>
+  <path fill="#a99ac8" d="M15 12h11v3h3v15H15v-3h-4V17h4zM39 12h10v3h4v4h1v10h-4v3H37V16h2z"/>
+  <path fill="#f1b4cd" d="M17 16h7v3h3v9H16v-3h-2v-6h3zM41 16h6v3h4v9h-3v2h-9V19h2z"/>
+  <path fill="#cf88b4" d="M17 16h7v3h-7v6h-3v-6h3zM41 16h6v3h-6v8h-2v-8h2z"/>
+  <path fill="#bcb2da" d="M22 25h18v3h6v5h3v11h-4v7h-5v5H23v-4h-5V38h-3v-8h7z"/>
+  <path fill="#ddd5ed" d="M25 26h13v3h6v5h2v9h-6v6h-7v3h-9V40h-4v-9h5z"/>
+  <path fill="#eee8f7" d="M27 26h10v4H27zM24 30h4v5h-4zM27 41h12v4h4v6H26v-4h-2v-4h3z"/>
+  <path fill="#9985b8" d="M31 21h7v3h3v3H29v-3h2zM20 48h5v6h-4zM42 43h3v8h-3z"/>
+  <path fill="#302b43" d="M24 33h6v8h-6zM39 33h6v8h-6z"/>
+  <path fill="#fffaff" d="M25 34h3v3h-3zM40 34h3v3h-3z"/>
+  <path fill="#ee99ba" d="M20 40h5v3h-5zM44 40h5v3h-5zM32 39h6v4h-2v2h-2v-2h-2z"/>
+  <path fill="#745777" d="M34 45h2v2h4v-2h2v3h-8z"/>
+  <path fill="#9bf064" d="M22 47h9v3h10v3H24v-2h-2zM23 51h5v6h-5z"/>
+  <path fill="#5eab48" d="M23 51h3v6h-3zM30 50h10v3H30z"/>
+  <path fill="#e4accc" d="M17 56h10v3H17zM34 56h11v3H34z"/>
+  <path fill="#f4c765" d="M43 44h12v3h4v8H42v-8h1z"/>
+  <path fill="#ffe19a" d="M44 44h11v3h3v2H43v-3h1z"/>
+  <path fill="#c68b48" d="M47 50h3v3h-3zM55 52h3v3h-3zM51 45h2v2h-2z"/>
+  <path fill="#eee8f7" d="M40 46h5v5h-5z"/>
+</svg>

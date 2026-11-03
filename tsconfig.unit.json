@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "src",
+    "outDir": "test/scratch/unit"
+  },
+  "include": ["src/game.ts", "src/storage.ts"]
+}
